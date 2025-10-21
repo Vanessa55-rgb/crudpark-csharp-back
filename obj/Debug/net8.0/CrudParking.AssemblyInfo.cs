@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("f5007ffd-8abf-4e16-964e-5be6d57a26b0")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("CrudParking")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+02340a192bf559b58005511f4646adef58d67350")]
 [assembly: System.Reflection.AssemblyProductAttribute("CrudParking")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CrudParking")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

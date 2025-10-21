@@ -132,3 +132,4 @@
 /home/gengar/Documents/CrudParking/obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.CrudParking.props
 /home/gengar/Documents/CrudParking/obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.CrudParking.props
 /home/gengar/Documents/CrudParking/obj/Debug/net8.0/staticwebassets.pack.json
+/home/gengar/Documents/CrudParking/obj/Debug/net8.0/CrudParking.sourcelink.json
