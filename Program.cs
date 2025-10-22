@@ -5,13 +5,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
+// ✅ CORS — permite tanto el frontend local como el backend en Render
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins, policy =>
     {
         policy.WithOrigins(
-                "http://localhost:5173",
-                "https://crudpark-csharp-back.onrender.com"
+                "http://localhost:5173",                    // Vue local (Vite)
+                "https://crudpark-csharp-back.onrender.com" // Backend desplegado
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
@@ -19,6 +20,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+// ✅ Configuración de base de datos (usa variable si existe o conexión local)
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
@@ -34,10 +36,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     }
     else
     {
+        // 👇 asegúrate de tener "DefaultConnection" en tu appsettings.json
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
     }
 });
 
+// ✅ Configurar controladores y JSON
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -46,19 +50,33 @@ builder.Services.AddControllers()
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
+// ✅ Importante: habilita CORS *antes* de los controladores
 app.UseCors(MyAllowSpecificOrigins);
+
+// ✅ HTTPS opcional mientras estás en local
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseRouting();
 app.UseAuthorization();
 
+// ✅ Mapea tus controladores
 app.MapControllers();
 
+// ✅ Ruta raíz de prueba
 app.MapGet("/", () => Results.Json(new
 {
     message = "🚀 CRUDPark API is running successfully!",
-    environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"
+    environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development"
 }));
 
+// ✅ Asegura que el backend escuche en el puerto 8080
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://*:{port}");
 
