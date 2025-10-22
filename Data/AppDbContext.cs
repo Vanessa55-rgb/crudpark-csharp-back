@@ -12,5 +12,7 @@ namespace CrudParking.Models
         public DbSet<Rate> Rates { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Pay> Pays { get; set; }
+        public DbSet<MembershipPlan> MembershipPlans { get; set; }
+
     }
 }

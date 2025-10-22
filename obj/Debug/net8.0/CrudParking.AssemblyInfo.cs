@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CrudParking")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+02340a192bf559b58005511f4646adef58d67350")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+94e4ca66742d468719233a96ab7c83f15fda143a")]
 [assembly: System.Reflection.AssemblyProductAttribute("CrudParking")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CrudParking")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
