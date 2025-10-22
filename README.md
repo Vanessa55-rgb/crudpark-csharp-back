@@ -56,6 +56,7 @@ docker run --name crudpark-db -e POSTGRES_PASSWORD=yourpassword -p 5432:5432 -d 
 Then, update your connection string:
 ```
 Host=88.99.38.95;Port=5432;Database=postgres;Username=postgres;Password=54235423;
+```
 
 ---
 
