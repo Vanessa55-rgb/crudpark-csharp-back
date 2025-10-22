@@ -1,31 +1,38 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using CrudParking.Models;
+using System.Diagnostics;
 
-namespace CrudParking.Controllers;
-
-public class HomeController : Controller
+namespace CrudParking.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class HomeController : ControllerBase
     {
-        _logger = logger;
-    }
+        private readonly ILogger<HomeController> _logger;
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+        public HomeController(ILogger<HomeController> logger)
+        {
+            _logger = logger;
+        }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+        [HttpGet("status")]
+        public IActionResult Status()
+        {
+            return Ok(new
+            {
+                message = "🚀 CRUDPark API is running successfully!",
+                environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"
+            });
+        }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        [HttpGet("error")]
+        public IActionResult Error()
+        {
+            var traceId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            return Problem(
+                title: "Internal Server Error",
+                detail: "An unexpected error occurred in the server.",
+                instance: traceId
+            );
+        }
     }
 }
