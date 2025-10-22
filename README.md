@@ -32,10 +32,7 @@ dotnet restore
 ```
 
 ### ⚙️ Set up environment variables
-Create a file named `.env` or set environment variables manually in your system.  
-For local development, use the `appsettings.Development.json` file to store your configuration.
 
-Example connection string:
 ```json
 "ConnectionStrings": {
   "DefaultConnection": "Host=88.99.38.95;Port=5432;Database=postgres;Username=postgres;Password=54235423"
