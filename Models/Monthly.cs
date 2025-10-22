@@ -25,6 +25,6 @@ public class Monthly
     public bool Status { get; set; }
     
     [NotMapped]
-    public bool Overdue => DateEnd > DateTime.Now;
+    public bool Overdue => DateEnd < DateTime.Now;
     
 }

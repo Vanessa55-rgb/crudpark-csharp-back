@@ -1,31 +1,31 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using CrudParking.Models;
 
-namespace CrudParking.Controllers;
-
-public class HomeController : Controller
+namespace CrudParking.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class HomeController : ControllerBase
     {
-        _logger = logger;
-    }
-
-    public IActionResult Index()
-    {
-        return View();
-    }
-
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        [HttpGet]
+        public IActionResult GetStatus()
+        {
+            return Ok(new
+            {
+                message = "🚗 CrudParking API is running successfully!",
+                status = "online",
+                version = "v1.0.0",
+                environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production",
+                serverTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC",
+                endpoints = new[]
+                {
+                    new { name = "Operators", url = "/api/operator" },
+                    new { name = "Vehicles", url = "/api/vehicle" },
+                    new { name = "Tickets", url = "/api/ticket" },
+                    new { name = "Payments", url = "/api/pay" },
+                    new { name = "Rates", url = "/api/rate" },
+                    new { name = "Memberships", url = "/api/monthly" }
+                }
+            });
+        }
     }
 }

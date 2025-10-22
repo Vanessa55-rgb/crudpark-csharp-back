@@ -229,12 +229,7 @@ namespace CrudParking.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int?>("VehicleMonthlyID")
-                        .HasColumnType("integer");
-
                     b.HasKey("ID");
-
-                    b.HasIndex("VehicleMonthlyID");
 
                     b.ToTable("VehiclesM");
                 });
@@ -242,7 +237,7 @@ namespace CrudParking.Migrations
             modelBuilder.Entity("CrudParking.Models.Monthly", b =>
                 {
                     b.HasOne("CrudParking.Models.VehicleMonthly", "VehicleMonthly")
-                        .WithMany()
+                        .WithMany("Monthlies")
                         .HasForeignKey("VehicleMonthlyID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -278,13 +273,6 @@ namespace CrudParking.Migrations
                         .IsRequired();
 
                     b.Navigation("Operator");
-                });
-
-            modelBuilder.Entity("CrudParking.Models.VehicleMonthly", b =>
-                {
-                    b.HasOne("CrudParking.Models.VehicleMonthly", null)
-                        .WithMany("Monthlies")
-                        .HasForeignKey("VehicleMonthlyID");
                 });
 
             modelBuilder.Entity("CrudParking.Models.Operator", b =>

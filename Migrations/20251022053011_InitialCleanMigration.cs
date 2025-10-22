@@ -7,11 +7,26 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CrudParking.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialCleanMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "MembershipPlans",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Price = table.Column<decimal>(type: "numeric(10,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MembershipPlans", x => x.ID);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Operators",
                 columns: table => new
@@ -53,17 +68,11 @@ namespace CrudParking.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Plate = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     Titularname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    VehicleMonthlyID = table.Column<int>(type: "integer", nullable: true)
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VehiclesM", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_VehiclesM_VehiclesM_VehicleMonthlyID",
-                        column: x => x.VehicleMonthlyID,
-                        principalTable: "VehiclesM",
-                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(
@@ -161,16 +170,14 @@ namespace CrudParking.Migrations
                 name: "IX_Tickets_OperatorID",
                 table: "Tickets",
                 column: "OperatorID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_VehiclesM_VehicleMonthlyID",
-                table: "VehiclesM",
-                column: "VehicleMonthlyID");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "MembershipPlans");
+
             migrationBuilder.DropTable(
                 name: "Monthlies");
 

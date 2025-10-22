@@ -16,18 +16,25 @@ namespace CrudParking.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pay>>> Index()
+        public async Task<ActionResult<IEnumerable<Pay>>> GetAll()
         {
-            return await _context.Pays.ToListAsync();
+            var pays = await _context.Pays
+                .Include(p => p.Ticket)
+                .Include(p => p.Operator)
+                .ToListAsync();
+
+            return Ok(pays);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Pay>> GetById(int id)
         {
-            var pay = await _context.Pays.FindAsync(id);
-            if (pay == null)
-                return NotFound();
-            return pay;
+            var pay = await _context.Pays
+                .Include(p => p.Ticket)
+                .Include(p => p.Operator)
+                .FirstOrDefaultAsync(p => p.ID == id);
+
+            return pay == null ? NotFound() : Ok(pay);
         }
 
         [HttpPost]
@@ -41,8 +48,7 @@ namespace CrudParking.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, Pay pay)
         {
-            if (id != pay.ID)
-                return BadRequest();
+            if (id != pay.ID) return BadRequest();
 
             _context.Entry(pay).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -53,8 +59,7 @@ namespace CrudParking.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var pay = await _context.Pays.FindAsync(id);
-            if (pay == null)
-                return NotFound();
+            if (pay == null) return NotFound();
 
             _context.Pays.Remove(pay);
             await _context.SaveChangesAsync();

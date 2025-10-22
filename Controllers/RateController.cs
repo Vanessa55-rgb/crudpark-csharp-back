@@ -16,18 +16,16 @@ namespace CrudParking.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rate>>> Index()
+        public async Task<ActionResult<IEnumerable<Rate>>> GetAll()
         {
-            return await _context.Rates.ToListAsync();
+            return Ok(await _context.Rates.ToListAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Rate>> GetById(int id)
         {
             var rate = await _context.Rates.FindAsync(id);
-            if (rate == null)
-                return NotFound();
-            return rate;
+            return rate == null ? NotFound() : Ok(rate);
         }
 
         [HttpPost]
@@ -41,8 +39,7 @@ namespace CrudParking.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, Rate rate)
         {
-            if (id != rate.ID)
-                return BadRequest();
+            if (id != rate.ID) return BadRequest();
 
             _context.Entry(rate).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -53,8 +50,7 @@ namespace CrudParking.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var rate = await _context.Rates.FindAsync(id);
-            if (rate == null)
-                return NotFound();
+            if (rate == null) return NotFound();
 
             _context.Rates.Remove(rate);
             await _context.SaveChangesAsync();

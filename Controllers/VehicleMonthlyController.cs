@@ -1,64 +1,60 @@
 using CrudParking.Models;
-namespace CrudParking.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-[ApiController]
-[Route("api/[controller]")]
-public class VehicleMonthlyController : ControllerBase
+namespace CrudParking.Controllers
 {
-    private readonly AppDbContext _context;
-    public VehicleMonthlyController(AppDbContext context)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class VehicleMonthlyController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<VehicleMonthly>>> Index()
-    {
-        return await _context.VehiclesM.ToListAsync();
-    }
-
-    [HttpPost("{id}")]
-    [ValidateAntiForgeryToken]
-    public async Task<ActionResult<VehicleMonthly>> GetById(int id)
-    {
-        var vm = await _context.VehiclesM.FindAsync();
-        if (vm == null)
+        public VehicleMonthlyController(AppDbContext context)
         {
-            return NotFound();
+            _context = context;
         }
-        return vm;
-    }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<ActionResult<VehicleMonthly>> Create(VehicleMonthly vh)
-    {
-            _context.VehiclesM.Add(vh);
-            _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = vh.ID }, vh);
-    }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<VehicleMonthly>>> GetAll()
+        {
+            return Ok(await _context.VehiclesM.ToListAsync());
+        }
 
-    [HttpPut("{id}")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Update(int id, VehicleMonthly vh)
-    {
-        _context.Entry(vh).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
-        return NoContent();
-    }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<VehicleMonthly>> GetById(int id)
+        {
+            var vehicle = await _context.VehiclesM.FindAsync(id);
+            return vehicle == null ? NotFound() : Ok(vehicle);
+        }
 
-    [HttpDelete("{id}")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(int id)
-    {
-        var vh = await _context.VehiclesM.FindAsync(id);
-        if (vh == null) return NotFound();
+        [HttpPost]
+        public async Task<ActionResult<VehicleMonthly>> Create(VehicleMonthly vehicle)
+        {
+            _context.VehiclesM.Add(vehicle);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetById), new { id = vehicle.ID }, vehicle);
+        }
 
-        _context.VehiclesM.Remove(vh);
-        await _context.SaveChangesAsync();
-        return NoContent();
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, VehicleMonthly vehicle)
+        {
+            if (id != vehicle.ID) return BadRequest();
+
+            _context.Entry(vehicle).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var vehicle = await _context.VehiclesM.FindAsync(id);
+            if (vehicle == null) return NotFound();
+
+            _context.VehiclesM.Remove(vehicle);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }

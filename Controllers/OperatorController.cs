@@ -16,35 +16,32 @@ namespace CrudParking.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Operator>>> Index()
+        public async Task<ActionResult<IEnumerable<Operator>>> GetAll()
         {
-            return await _context.Operators.ToListAsync();
+            return Ok(await _context.Operators.ToListAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Operator>> GetById(int id)
         {
-            var Operators = await _context.Operators.FindAsync(id);
-            if (Operators == null)
-                return NotFound();
-            return Operators;
+            var op = await _context.Operators.FindAsync(id);
+            return op == null ? NotFound() : Ok(op);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Operator>> Create(Operator Operators)
+        public async Task<ActionResult<Operator>> Create(Operator op)
         {
-            _context.Operators.Add(Operators);
+            _context.Operators.Add(op);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = Operators.ID }, Operators);
+            return CreatedAtAction(nameof(GetById), new { id = op.ID }, op);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Operator Operators)
+        public async Task<IActionResult> Update(int id, Operator op)
         {
-            if (id != Operators.ID)
-                return BadRequest();
+            if (id != op.ID) return BadRequest();
 
-            _context.Entry(Operators).State = EntityState.Modified;
+            _context.Entry(op).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return NoContent();
         }
@@ -52,11 +49,10 @@ namespace CrudParking.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var Operators = await _context.Operators.FindAsync(id);
-            if (Operators == null)
-                return NotFound();
+            var op = await _context.Operators.FindAsync(id);
+            if (op == null) return NotFound();
 
-            _context.Operators.Remove(Operators);
+            _context.Operators.Remove(op);
             await _context.SaveChangesAsync();
             return NoContent();
         }

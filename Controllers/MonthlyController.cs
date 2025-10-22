@@ -16,18 +16,23 @@ namespace CrudParking.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Monthly>>> Index()
+        public async Task<ActionResult<IEnumerable<Monthly>>> GetAll()
         {
-            return await _context.Monthlies.ToListAsync();
+            var monthlies = await _context.Monthlies
+                .Include(m => m.VehicleMonthly)
+                .ToListAsync();
+
+            return Ok(monthlies);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Monthly>> GetById(int id)
         {
-            var monthly = await _context.Monthlies.FindAsync(id);
-            if (monthly == null)
-                return NotFound();
-            return monthly;
+            var monthly = await _context.Monthlies
+                .Include(m => m.VehicleMonthly)
+                .FirstOrDefaultAsync(m => m.ID == id);
+
+            return monthly == null ? NotFound() : Ok(monthly);
         }
 
         [HttpPost]
@@ -41,8 +46,7 @@ namespace CrudParking.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, Monthly monthly)
         {
-            if (id != monthly.ID)
-                return BadRequest();
+            if (id != monthly.ID) return BadRequest();
 
             _context.Entry(monthly).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -53,8 +57,7 @@ namespace CrudParking.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var monthly = await _context.Monthlies.FindAsync(id);
-            if (monthly == null)
-                return NotFound();
+            if (monthly == null) return NotFound();
 
             _context.Monthlies.Remove(monthly);
             await _context.SaveChangesAsync();

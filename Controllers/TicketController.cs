@@ -16,35 +16,41 @@ namespace CrudParking.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ticket>>> Index()
+        public async Task<ActionResult<IEnumerable<Ticket>>> GetAll()
         {
-            return await _context.Tickets.ToListAsync();
+            var tickets = await _context.Tickets
+                .Include(t => t.Operator)
+                .Include(t => t.Pay)
+                .ToListAsync();
+
+            return Ok(tickets);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Ticket>> GetById(int id)
         {
-            var Tickets = await _context.Tickets.FindAsync(id);
-            if (Tickets == null)
-                return NotFound();
-            return Tickets;
+            var ticket = await _context.Tickets
+                .Include(t => t.Operator)
+                .Include(t => t.Pay)
+                .FirstOrDefaultAsync(t => t.ID == id);
+
+            return ticket == null ? NotFound() : Ok(ticket);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Ticket>> Create(Ticket Tickets)
+        public async Task<ActionResult<Ticket>> Create(Ticket ticket)
         {
-            _context.Tickets.Add(Tickets);
+            _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = Tickets.ID }, Tickets);
+            return CreatedAtAction(nameof(GetById), new { id = ticket.ID }, ticket);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Ticket Tickets)
+        public async Task<IActionResult> Update(int id, Ticket ticket)
         {
-            if (id != Tickets.ID)
-                return BadRequest();
+            if (id != ticket.ID) return BadRequest();
 
-            _context.Entry(Tickets).State = EntityState.Modified;
+            _context.Entry(ticket).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return NoContent();
         }
@@ -52,11 +58,10 @@ namespace CrudParking.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var Tickets = await _context.Tickets.FindAsync(id);
-            if (Tickets == null)
-                return NotFound();
+            var ticket = await _context.Tickets.FindAsync(id);
+            if (ticket == null) return NotFound();
 
-            _context.Tickets.Remove(Tickets);
+            _context.Tickets.Remove(ticket);
             await _context.SaveChangesAsync();
             return NoContent();
         }
