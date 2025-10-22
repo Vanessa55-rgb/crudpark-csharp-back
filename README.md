@@ -1,81 +1,116 @@
-# 🚗 CRUDPark – Backend (.NET 8 + PostgreSQL + Docker)
+# 🏁 CrudParking Backend
+
+This repository contains the backend service for **CrudParking**, a parking management system built with **ASP.NET Core** and **PostgreSQL**.  
+It provides a RESTful API to handle vehicle entries, exits, users, and parking records efficiently.
+
+---
 
 ## 🎯 Project Objective
-**CRUDPark** is a backend API developed in **.NET 8 (C#)** designed to manage the operations of a parking management system.  
-It supports complete CRUD (Create, Read, Update, Delete) functionality for key entities such as vehicles, clients, and parking records.  
-The project integrates with a **PostgreSQL** database, running within a **Docker** container and deployed on **Render**.
+
+The goal of this project is to offer a simple and scalable backend for managing parking operations — including vehicle registration, parking time tracking, and fee calculation — using a clean architecture and modern .NET tools.
 
 ---
 
-## 🌐 Live Deployment
-Access the deployed backend here:  
-👉 [https://crudpark-csharp-back.onrender.com](https://crudpark-csharp-back.onrender.com)
+## ⚙️ Installation & Execution
 
----
+### 🧩 Prerequisites
+Make sure you have the following installed:
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download)
+- [PostgreSQL 14+](https://www.postgresql.org/download/)
+- [Render](https://render.com/) 
+- [Git](https://git-scm.com/)
 
-## ⚙️ Installation & Execution Instructions
-
-### 1. Clone the Repository
+### 🔽 Clone the repository
 ```bash
 git clone https://github.com/Vanessa55-rgb/crudpark-csharp-back.git
 cd crudpark-csharp-back
 ```
 
-### 2. Configure Environment Variables
-Create a file named `.env` or configure your Render environment with:
-```
-DATABASE_URL=Host=88.99.38.95;Database=postgres;Username=postgres;Password=54235423
-PORT=5432
-```
-
-### 3. Run with Docker
-Build and run the container locally:
-```bash
-docker build -t crudpark-backend .
-docker run -p 8080:8080 --env-file .env crudpark-backend
-```
-
-### 4. Run Without Docker (optional)
-If you want to run the project directly:
+### 📦 Install dependencies
 ```bash
 dotnet restore
+```
+
+### ⚙️ Set up environment variables
+Create a file named `.env` or set environment variables manually in your system.  
+For local development, use the `appsettings.Development.json` file to store your configuration.
+
+Example connection string:
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Host=88.99.38.95;Port=5432;Database=postgres;Username=postgres;Password=54235423"
+}
+```
+
+
+### ▶️ Run the project
+```bash
 dotnet run
+```
+
+Once started, the API will be available at:
+```
+http://localhost:5000
+```
+
+You can test it by visiting:
+```
+http://localhost:5000/home
 ```
 
 ---
 
 ## 🗄️ Database Configuration (PostgreSQL)
 
-**Database Engine:** PostgreSQL  
-You can run a local instance using Docker:
-
-```bash
-docker run --name crudpark-db -e POSTGRES_PASSWORD=yourpassword -p 5432:5432 -d postgres
-```
-
-Then, update your connection string:
-```
-Host=88.99.38.95;Port=5432;Database=postgres;Username=postgres;Password=54235423;
-```
+1. Create a new PostgreSQL database:
+   ```sql
+   CREATE DATABASE crudparking;
+   ```
+2. Update your connection string in `appsettings.json` or your environment.
+3. Run migrations (if available):
+   ```bash
+   dotnet ef database update
+   ```
 
 ---
 
-## 👥 Team Credits
+## 🔁 General Usage Flow
 
-**Team Name:** crudpark-csharp-back  
-**Members:**
-- Vanessa Gómez López  
-- Santiago Restrepo Arismendy
-- Andres Marin
-
-**Team Registration:**  
-[https://teams.crudzaso.com](https://teams.crudzaso.com)
+1. **Start the API** using `dotnet run`.
+2. **Frontend** or Postman consumes the API endpoints under `/api/...`.
+3. Example routes:
+   - `GET /home` → Check if the backend is online.
+   - `GET /vehicles` → Retrieve all registered vehicles.
+   - `POST /vehicles` → Add a new vehicle.
+   - `PUT /vehicles/{id}` → Update vehicle info.
+   - `DELETE /vehicles/{id}` → Remove a vehicle.
+4. The system interacts with the **PostgreSQL** database to store all records.
 
 ---
 
-## 🧩 Technologies Used
-- **C# / .NET 8**
-- **Entity Framework Core**
-- **PostgreSQL**
-- **Docker**
-- **Render**
+## 👥 Credits
+
+- **Team:** Java_C#
+- **Developers:**
+  - Andres Marin
+  - Santiago Restrepo Arismendy 
+  - Vanessa Gomez Lopez
+
+🔗 **Team registration:** [https://teams.crudzaso.com](https://teams.crudzaso.com)
+
+
+---
+
+## 🧠 Technologies Used
+
+- ASP.NET Core 8
+- Entity Framework Core
+- PostgreSQL
+- C#
+- RESTful API Architecture
+
+---
+
+## 🧩 License
+
+This project is open source
