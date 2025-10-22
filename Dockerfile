@@ -1,25 +1,24 @@
-# Imagen base oficial de .NET 8 SDK para compilar
+# Etapa 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-
 WORKDIR /app
 
-# Copiar archivos del proyecto y restaurar dependencias
-COPY *.csproj ./
-RUN dotnet restore
-
-# Copiar todo y compilar la aplicación
+# Copiar archivos del proyecto
 COPY . ./
-RUN dotnet publish -c Release -o out
+RUN dotnet restore "CrudParking.csproj"
+RUN dotnet publish "CrudParking.csproj" -c Release -o /app/out
 
-# Imagen final con solo el runtime de ASP.NET
+# Etapa 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 
-COPY --from=build /app/out ./
+# Copiar archivos compilados
+COPY --from=build /app/out .
 
-# Establecer variable de entorno para el puerto
+# Configurar puerto para Render
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
-# Ejecutar la aplicación
+# Variables de entorno para PostgreSQL (Render las gestiona automáticamente)
+ENV DOTNET_RUNNING_IN_CONTAINER=true
+
 ENTRYPOINT ["dotnet", "CrudParking.dll"]
