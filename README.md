@@ -16,7 +16,7 @@ The goal of this project is to offer a simple and scalable backend for managing 
 ### 🧩 Prerequisites
 Make sure you have the following installed:
 - [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download)
-- [PostgreSQL 14+](https://www.postgresql.org/download/)
+- [PostgreSQL](https://www.postgresql.org/download/)
 - [Render](https://render.com/) 
 - [Git](https://git-scm.com/)
 
