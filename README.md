@@ -110,4 +110,4 @@ http://localhost:5000/home
 
 ## 🧩 License
 
-This project is open source
+This project is open source.
